@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         listView = findViewById(R.id.album_list);
-        //Albums albums = null;
 
         try {
            this.albums = Albums.readAlbums(this);
@@ -109,8 +108,6 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(new ArrayAdapter<Album>(this, R.layout.album, albums.getAlbums()));
 
         registerForContextMenu(listView);
-
-        //listView.getAdapter().onItemClick((p, v, pos, id) -> showAlbum(pos));
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -130,25 +127,19 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        /*
         //Albums albums = null;
         try {
             albums = Albums.readAlbums(this);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
+        */
         switch (item.getItemId()) {
             case R.id.rename:
                 showAlbum((int) info.id);
-                /*
-                Toast.makeText(this, "You have chosen the " + getResources().getString(R.string.rename) +
-                                " context menu option for " + albums.getAlbums().get((int)info.id),
-                        Toast.LENGTH_SHORT).show();
-                  */
-
-                 //albums.getAlbums().get((int) info.id);
-
                 return true;
+
             case R.id.delete:
                 Toast.makeText(this, getResources().getString(R.string.delete) + "d " +
                                 albums.getAlbums().get((int)info.id),
@@ -165,14 +156,6 @@ public class MainActivity extends AppCompatActivity {
 
                 listView.setAdapter(new ArrayAdapter<Album>(this, R.layout.album, albums.getAlbums()));
 
-                /*
-                try {
-                    listView.setAdapter(
-                            new ArrayAdapter<Album>(this, R.layout.album, Albums.readAlbums(this).getAlbums()));
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                */
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -182,6 +165,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void addAlbum(){
         Intent intent = new Intent(this, AddAlbum.class);
+        intent.putExtra(AddAlbum.ALBUMS, albums);
+        intent.putExtra(AddAlbum.ALBUM_INDEX,-1);
         startActivityForResult(intent, ADD_ALBUM);
     }
 
@@ -208,11 +193,11 @@ public class MainActivity extends AppCompatActivity {
             Album album = albums.getAlbums().get(index);
             album.setName(name);
         } else {
+            Toast.makeText(getApplicationContext(), "true", Toast.LENGTH_SHORT).show();
             albums.addAlbum(new Album(name));
         }
 
         try {
-            //Albums albums = Albums.readAlbums(this);
             Albums.write(albums, this);
         } catch (IOException e) {
             e.printStackTrace();
@@ -260,6 +245,9 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
             return true;
+        }
+        if (id == R.id.action_exit) {
+            finish();
         }
 
         return super.onOptionsItemSelected(item);

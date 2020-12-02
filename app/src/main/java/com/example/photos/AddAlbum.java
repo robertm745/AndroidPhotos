@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.example.photos.Album;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -56,8 +55,9 @@ public class AddAlbum extends AppCompatActivity {
             return; // does not quit activity, just returns from method
         }
 
-        if (albums != null && albums.contains(name) && !name.equalsIgnoreCase(getIntent().getExtras().getString(ALBUM_NAME))) {
-            Toast.makeText(getApplicationContext(), "Duplicate album name A", Toast.LENGTH_SHORT).show();
+
+        if (albums.contains(name) && (albumIndex == -1 || !name.equalsIgnoreCase(getIntent().getExtras().getString(ALBUM_NAME)))) {
+            Toast.makeText(getApplicationContext(), "Duplicate album name", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -65,6 +65,7 @@ public class AddAlbum extends AppCompatActivity {
         // make Bundle
         Bundle bundle = new Bundle();
         bundle.putString(ALBUM_NAME, name);
+        bundle.putInt(ALBUM_INDEX, albumIndex);
 
         // send back to caller
         Intent intent = new Intent();
