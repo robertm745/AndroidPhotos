@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.example.photos.Album;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -12,7 +13,11 @@ import androidx.appcompat.widget.Toolbar;
 public class AddAlbum extends AppCompatActivity {
 
     public static final String ALBUM_NAME = "albumName";
+    public static final String ALBUM_INDEX = "albumIndex";
+    public static final String ALBUMS = "albums";
 
+    private int albumIndex;
+    private Albums albums;
     private EditText albumName;
 
     @Override
@@ -26,6 +31,13 @@ public class AddAlbum extends AppCompatActivity {
 
         albumName = findViewById(R.id.album_name);
 
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            albumIndex = bundle.getInt(ALBUM_INDEX);
+            albumName.setText(bundle.getString(ALBUM_NAME));
+            this.albums = (Albums) getIntent().getSerializableExtra(ALBUMS);
+        }
     }
 
     public void cancel(View view) {
@@ -43,6 +55,12 @@ public class AddAlbum extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
             return; // does not quit activity, just returns from method
         }
+
+        if (albums != null && albums.contains(name) && !name.equalsIgnoreCase(getIntent().getExtras().getString(ALBUM_NAME))) {
+            Toast.makeText(getApplicationContext(), "Duplicate album name A", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
 
         // make Bundle
         Bundle bundle = new Bundle();

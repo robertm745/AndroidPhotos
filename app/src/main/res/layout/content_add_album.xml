@@ -20,7 +20,9 @@
         android:id="@+id/album_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/editbox_background" />
+        android:background="@android:drawable/editbox_background"
+        android:hint="Enter new album name"
+        android:textColorHint="@color/black"/>
 
 
     <!--  Buttons for save and cancel -->
