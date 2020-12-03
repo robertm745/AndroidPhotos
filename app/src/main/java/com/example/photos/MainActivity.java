@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int ADD_ALBUM = 1;
     public static final int EDIT_ALBUM = 2;
+    public static final int OPEN_ALBUM = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +107,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         listView.setAdapter(new ArrayAdapter<Album>(this, R.layout.album, albums.getAlbums()));
+
+
+       listView.setOnItemClickListener((p, V, pos, id) -> openAlbum(pos));
 
         registerForContextMenu(listView);
 
@@ -225,6 +229,19 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtras(bundle);
             intent.putExtra(AddAlbum.ALBUMS, albums);
             startActivityForResult(intent, EDIT_ALBUM);
+        }
+    }
+
+    public void openAlbum(int pos) {
+        if (albums.getAlbums().size() > 0) {
+            Bundle bundle = new Bundle();
+            Album album = albums.getAlbums().get(pos);
+            bundle.putInt(AddAlbum.ALBUM_INDEX, pos);
+            bundle.putString(AddAlbum.ALBUM_NAME, album.getName());
+            Intent intent = new Intent(this, OpenAlbum.class);
+            intent.putExtras(bundle);
+            intent.putExtra(AddAlbum.ALBUMS, albums);
+            startActivityForResult(intent, OPEN_ALBUM);
         }
     }
 

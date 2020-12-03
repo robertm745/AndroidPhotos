@@ -32,6 +32,10 @@ public class Album implements Serializable {
         return this.name;
     }
 
+    public int numberOfPhotos(){
+        return this.photos.size();
+    }
+
 
 
 }

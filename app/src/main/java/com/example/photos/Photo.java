@@ -1,5 +1,7 @@
 package com.example.photos;
 
+import android.net.Uri;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,9 +12,9 @@ public class Photo implements Serializable {
     ArrayList<String> locationTags;
     ArrayList<String> personTags;
 
-    public Photo(File file){
-        this.location = file.getAbsolutePath();
-        this.caption = file.getName();
+    public Photo(Uri uri){
+        this.location = uri.toString();
+        this.caption = new File(uri.getPath()).getName();
         this.locationTags = new ArrayList<String>();
         this.personTags = new ArrayList<String>();
     }
@@ -20,6 +22,7 @@ public class Photo implements Serializable {
     public String getLocation() {
         return location;
     }
+
 
     public void setLocation(String location) {
         this.location = location;

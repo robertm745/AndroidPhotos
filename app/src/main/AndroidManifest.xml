@@ -27,6 +27,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.photos.MainActivity" />
         </activity>
+        <activity
+            android:name=".OpenAlbum"
+            android:label="OpenAlbum"
+            android:theme="@style/Theme.Photos.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.photos.MainActivity" />
+        </activity>
+
     </application>
 
 </manifest>
