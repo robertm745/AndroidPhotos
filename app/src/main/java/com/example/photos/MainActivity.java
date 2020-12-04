@@ -64,6 +64,7 @@ class Albums implements Serializable {
         }
         return false;
     }
+    /*
 
     public Albums deepCopy() {
         Albums copy = new Albums();
@@ -75,6 +76,8 @@ class Albums implements Serializable {
             }
         }
     }
+    
+     */
 
     public static Albums readAlbums(Context context) throws IOException, ClassNotFoundException {
         FileInputStream fIn = context.openFileInput("data.dat");
