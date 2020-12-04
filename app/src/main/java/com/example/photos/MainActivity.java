@@ -31,6 +31,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import static android.content.Context.MODE_PRIVATE;
+import static android.content.Context.POWER_SERVICE;
+
 class Albums implements Serializable {
 
     private ArrayList<Album> albums;
@@ -41,6 +43,10 @@ class Albums implements Serializable {
 
     public ArrayList<Album> getAlbums() {
         return this.albums;
+    }
+
+    public void setAlbums(ArrayList<Album> albums) {
+        this.albums = albums;
     }
 
     public void addAlbum(Album album) {
@@ -57,6 +63,17 @@ class Albums implements Serializable {
                 return true;
         }
         return false;
+    }
+
+    public Albums deepCopy() {
+        Albums copy = new Albums();
+
+        for (Album a : albums) {
+            Album temp = new Album(a.toString());
+            for (Photo p : a.getPhotos()) {
+                temp.addPhoto(p);
+            }
+        }
     }
 
     public static Albums readAlbums(Context context) throws IOException, ClassNotFoundException {

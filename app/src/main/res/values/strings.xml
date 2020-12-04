@@ -19,4 +19,5 @@
     <string name="first_fragment_label">First fragment</string>
     <string name="second_fragment_label">Second fragment</string>
     <string name="title_activity_open_album">OpenAlbum</string>
+    <string name="move">Move</string>
 </resources>
