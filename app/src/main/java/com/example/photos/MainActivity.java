@@ -50,6 +50,12 @@ class Albums implements Serializable {
     }
 
     public void addAlbum(Album album) {
+        for (int i = 0; i < this.albums.size(); i++) {
+            if (this.albums.get(i).getName().compareTo(album.name) < 1) continue;
+            if (this.albums.get(i).getName().compareTo(album.name) == 0) return;
+            this.albums.add(i, album);
+            return;
+        }
         this.albums.add(album);
     }
 
