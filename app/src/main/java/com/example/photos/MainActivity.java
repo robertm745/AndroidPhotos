@@ -70,20 +70,14 @@ class Albums implements Serializable {
         }
         return false;
     }
-    /*
 
-    public Albums deepCopy() {
-        Albums copy = new Albums();
-
-        for (Album a : albums) {
-            Album temp = new Album(a.toString());
-            for (Photo p : a.getPhotos()) {
-                temp.addPhoto(p);
-            }
+    public int getAlbumIndex(Album a) {
+        for (int i = 0; i < albums.size(); i++) {
+            if (a.toString().equalsIgnoreCase(albums.get(i).toString()))
+                return i;
         }
+        return -1;
     }
-    
-     */
 
     public static Albums readAlbums(Context context) throws IOException, ClassNotFoundException {
         FileInputStream fIn = context.openFileInput("data.dat");

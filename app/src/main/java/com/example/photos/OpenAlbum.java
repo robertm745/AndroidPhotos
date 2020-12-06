@@ -109,10 +109,11 @@ public class OpenAlbum extends AppCompatActivity {
 
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Photo p;
         switch (item.getItemId()) {
             case R.id.photo_delete:
                 Toast.makeText(this, getResources().getString(R.string.delete) + " " + albums.getAlbums().get(albumIndex).getPhotos().get((int) info.id), Toast.LENGTH_SHORT).show();
-                Photo p = albums.getAlbums().get(albumIndex).getPhotos().remove((int) info.id);
+                p = albums.getAlbums().get(albumIndex).getPhotos().remove((int) info.id);
 
 
                 try {
@@ -121,61 +122,49 @@ public class OpenAlbum extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-               myImgAdapter.setAlbum(albums.getAlbums().get(albumIndex));
-               gridview.setAdapter(myImgAdapter);
-
+                myImgAdapter.setAlbum(albums.getAlbums().get(albumIndex));
+                gridview.setAdapter(myImgAdapter);
 
 
                 return true;
             case R.id.photo_move:
+                Album temp = albums.getAlbums().get(albumIndex);
                 movePhoto((int) info.id);
+                    /*
+                if (!albums.getAlbums().contains(temp)) {
+                    albums.addAlbum(temp);
+                    albumIndex = albums.getAlbumIndex(temp);
+                    try {
+                        Albums.write(albums, this);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                     */
                 return true;
             default:
                 return super.onContextItemSelected(item);
         }
     }
 
-    public void movePhoto(int index) {
+    public void movePhoto(int photoIndex) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select an album");
 
-        ArrayList<Album> items = albums.getAlbums();
-        Photo p = albums.getAlbums().get(albumIndex).getPhotos().get(index);
-        Album temp = albums.getAlbums().get(albumIndex);
-        items.remove(albumIndex);
+        Album temp = albums.getAlbums().remove(albumIndex);
 
-        ListAdapter adapter = new ArrayAdapter<Album>(
-                getApplicationContext(), R.layout.move_list_row, albums.getAlbums()) {
-
-            ViewHolder holder;
-
-            class ViewHolder {
-                TextView title;
-            }
-
-            public View getView(int position, View convertView,
-                                ViewGroup parent) {
-                final LayoutInflater inflater = (LayoutInflater) getApplicationContext()
-                        .getSystemService(
-                                Context.LAYOUT_INFLATER_SERVICE);
-
+        ListAdapter adapter = new ArrayAdapter<Album>(getApplicationContext(), R.layout.move_list_row, albums.getAlbums()) {
+            TextView txt;
+            public View getView(int position, View convertView, ViewGroup parent) {
+                LayoutInflater inflater = getLayoutInflater();
                 if (convertView == null) {
-                    convertView = inflater.inflate(
-                            R.layout.move_list_row, null);
-
-                    holder = new ViewHolder();
-                    holder.title = (TextView) convertView
-                            .findViewById(R.id.row_name);
-                    convertView.setTag(holder);
+                    convertView = inflater.inflate(R.layout.move_list_row, null);
+                    txt = (TextView) convertView.findViewById(R.id.row_name);
                 } else {
-                    // view already defined, retrieve view holder
-                    holder = (ViewHolder) convertView.getTag();
+                    txt = (TextView) convertView;
                 }
-
-
-                holder.title.setText(items.get(position).toString());
-
+                txt.setText(albums.getAlbums().get(position).toString());
                 return convertView;
             }
         };
@@ -185,27 +174,30 @@ public class OpenAlbum extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog,
                                         int destIndex) {
-
-                        items.get(destIndex).addPhoto(p);
-                        temp.getPhotos().remove(p);
-                        items.add(temp);
-                        Toast.makeText(getApplicationContext(), "Moved " + p.toString() + " to " + items.get(destIndex),Toast.LENGTH_SHORT).show();
-                        Albums newAlbums = new Albums();
-                        newAlbums.setAlbums(items);
+                        Photo p = temp.getPhotos().remove(photoIndex);
+                        albums.getAlbums().get(destIndex).addPhoto(p);
+                        Toast.makeText(getApplicationContext(), "Moved " + p.toString() + " to " + albums.getAlbums().get(destIndex).getName(), Toast.LENGTH_SHORT).show();
+                        albums.getAlbums().add(temp);
                         try {
-                            Albums.write(newAlbums, getApplicationContext());
-                            albums = Albums.readAlbums(getApplicationContext());
-                        } catch (IOException | ClassNotFoundException e) {
+                            Albums.write(albums, getApplicationContext());
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
 
-                        myImgAdapter.setAlbum(albums.getAlbums().get(albumIndex));
+                        myImgAdapter.setAlbum(temp);
                         gridview = (GridView) findViewById(R.id.gridview);
                         gridview.setAdapter(myImgAdapter);
 
 
                     }
                 });
+        builder.setCancelable(false);
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                albums.getAlbums().add(temp);
+            }
+        });
         AlertDialog alert = builder.create();
         alert.show();
     }
