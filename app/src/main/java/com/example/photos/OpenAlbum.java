@@ -41,6 +41,7 @@ public class OpenAlbum extends AppCompatActivity {
     public static final String ALBUMS = "albums";
 
     public static final int GALLERY_REQUEST_CODE = 123;
+    public static final int OPEN_PHOTO = 1;
 
     private int albumIndex;
     private Albums albums;
@@ -71,6 +72,22 @@ public class OpenAlbum extends AppCompatActivity {
         gridview.setAdapter(myImgAdapter);
 
         registerForContextMenu(gridview);
+
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int pos, long id) {
+                if (gridview.getAdapter().getCount() > 0) {
+                    Bundle bundle = new Bundle();
+                    Album album = albums.getAlbums().get(albumIndex);
+                    bundle.putInt(OpenPhoto.ALBUM_INDEX, albumIndex);
+                    bundle.putString(OpenPhoto.ALBUM_NAME, album.getName());
+                    bundle.putInt(OpenPhoto.PHOTO_INDEX, pos);
+                    Intent intent = new Intent(getApplicationContext(), OpenPhoto.class);
+                    intent.putExtras(bundle);
+                    intent.putExtra(AddAlbum.ALBUMS, albums);
+                    startActivityForResult(intent, OPEN_PHOTO);
+                }
+            }
+        });
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
