@@ -45,6 +45,8 @@ public class ImageAdapter extends BaseAdapter {
         }
 
         imageView.setImageURI(Uri.parse(album.getPhotos().get(position).getLocation()));
+
+
         return imageView;
     }
 

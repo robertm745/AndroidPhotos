@@ -69,7 +69,7 @@ public class OpenPhoto extends AppCompatActivity {
         });
 
         Button next = findViewById(R.id.next_button);
-        previous.setOnClickListener(new View.OnClickListener(){
+        next.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 if (photoIndex < albums.getAlbums().get(albumIndex).getPhotos().size()-1){
