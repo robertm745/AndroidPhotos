@@ -38,12 +38,16 @@ public class OpenPhoto extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             albumIndex = bundle.getInt(ALBUM_INDEX);
             photoIndex = bundle.getInt(PHOTO_INDEX);
             this.albums = (Albums) getIntent().getSerializableExtra(ALBUMS);
+            setTitle(bundle.getString(ALBUM_NAME) + "Slideshow");
         }
+
 
         FloatingActionButton fab = findViewById(R.id.add_tag_fab);
         fab.setOnClickListener(new View.OnClickListener() {

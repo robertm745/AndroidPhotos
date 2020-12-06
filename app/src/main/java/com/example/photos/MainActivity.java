@@ -262,11 +262,11 @@ public class MainActivity extends AppCompatActivity {
         if (albums.getAlbums().size() > 0) {
             Bundle bundle = new Bundle();
             Album album = albums.getAlbums().get(pos);
-            bundle.putInt(AddAlbum.ALBUM_INDEX, pos);
-            bundle.putString(AddAlbum.ALBUM_NAME, album.getName());
+            bundle.putInt(OpenAlbum.ALBUM_INDEX, pos);
+            bundle.putString(OpenAlbum.ALBUM_NAME, album.getName());
             Intent intent = new Intent(this, OpenAlbum.class);
             intent.putExtras(bundle);
-            intent.putExtra(AddAlbum.ALBUMS, albums);
+            intent.putExtra(OpenAlbum.ALBUMS, albums);
             startActivityForResult(intent, OPEN_ALBUM);
         }
     }

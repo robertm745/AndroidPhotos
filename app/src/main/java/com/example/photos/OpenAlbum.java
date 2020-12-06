@@ -47,7 +47,6 @@ public class OpenAlbum extends AppCompatActivity {
     private Albums albums;
     private ImageAdapter myImgAdapter;
     private GridView gridview;
-    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
