@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int ADD_ALBUM = 1;
     public static final int EDIT_ALBUM = 2;
     public static final int OPEN_ALBUM = 3;
+    public static final int SEARCH = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,17 +152,9 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        /*
-        //Albums albums = null;
-        try {
-            albums = Albums.readAlbums(this);
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        */
         switch (item.getItemId()) {
             case R.id.rename:
-                showAlbum((int) info.id);
+                renameAlbum((int) info.id);
                 return true;
 
             case R.id.delete:
@@ -239,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void showAlbum(int pos) {
+    public void renameAlbum(int pos) {
         if (albums.getAlbums().size() > 0) {
             Bundle bundle = new Bundle();
             Album album = albums.getAlbums().get(pos);
@@ -258,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
             Album album = albums.getAlbums().get(pos);
             bundle.putInt(OpenAlbum.ALBUM_INDEX, pos);
             bundle.putString(OpenAlbum.ALBUM_NAME, album.getName());
+            bundle.putBoolean(OpenAlbum.SEARCH_STATE, false);
             Intent intent = new Intent(this, OpenAlbum.class);
             intent.putExtras(bundle);
             intent.putExtra(OpenAlbum.ALBUMS, albums);
@@ -281,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
+            openSearch();
             return true;
         }
         if (id == R.id.action_exit) {
@@ -289,4 +284,11 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void openSearch() {
+        Intent intent = new Intent(getApplicationContext(), SearchPhotos.class);
+        intent.putExtra(SearchPhotos.ALBUMS, this.albums);
+        startActivityForResult(intent, SEARCH);
+    }
+
 }

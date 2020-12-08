@@ -23,4 +23,9 @@
     <string name="next">Next</string>
     <string name="image">Image</string>
     <string name="add_tag">Add tag</string>
+    <string name="title_activity_search_photos">SearchPhotos</string>
+    <string name="tag_val_prompt">Enter at least one Location or Tag Value</string>
+    <string name="enter_person_tag">Enter Person Tag</string>
+    <string name="enter_location_tag">Enter Location Tag</string>
+    <string name="search">Search</string>
 </resources>

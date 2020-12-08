@@ -39,6 +39,8 @@ public class OpenAlbum extends AppCompatActivity {
     public static final String ALBUM_NAME = "albumName";
     public static final String ALBUM_INDEX = "albumIndex";
     public static final String ALBUMS = "albums";
+    public static final String SEARCH_STATE = "state";
+    public static final String ALBUM = "album";
 
     public static final int GALLERY_REQUEST_CODE = 123;
     public static final int OPEN_PHOTO = 1;
@@ -47,6 +49,8 @@ public class OpenAlbum extends AppCompatActivity {
     private Albums albums;
     private ImageAdapter myImgAdapter;
     private GridView gridview;
+    private boolean searchState;
+    private Album album;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,25 +62,35 @@ public class OpenAlbum extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            albumIndex = bundle.getInt(ALBUM_INDEX);
-            this.albums = (Albums) getIntent().getSerializableExtra(ALBUMS);
-        }
-
         setTitle(bundle.getString(ALBUM_NAME));
+        this.searchState = bundle.getBoolean(OpenAlbum.SEARCH_STATE);
+        albumIndex = bundle.getInt(ALBUM_INDEX);
+        this.albums = (Albums) getIntent().getSerializableExtra(ALBUMS);
+        if (searchState)
+            this.album = (Album) bundle.getSerializable(OpenAlbum.ALBUM);
+        else
+            this.album = albums.getAlbums().get(albumIndex);
 
+
+
+
+        // change album here
         myImgAdapter = new ImageAdapter(this);
-        myImgAdapter.setAlbum(albums.getAlbums().get(albumIndex));
-        gridview = (GridView) findViewById(R.id.gridview);
+        if (searchState)
+            myImgAdapter.setAlbum(this.album);
+        else
+            myImgAdapter.setAlbum(albums.getAlbums().get(albumIndex));
+        gridview = findViewById(R.id.gridview);
         gridview.setAdapter(myImgAdapter);
 
         registerForContextMenu(gridview);
 
+        // change album here
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int pos, long id) {
                 if (gridview.getAdapter().getCount() > 0) {
                     Bundle bundle = new Bundle();
-                    Album album = albums.getAlbums().get(albumIndex);
+                    bundle.putSerializable(OpenPhoto.ALBUM, album);
                     bundle.putInt(OpenPhoto.ALBUM_INDEX, albumIndex);
                     bundle.putString(OpenPhoto.ALBUM_NAME, album.getName());
                     bundle.putInt(OpenPhoto.PHOTO_INDEX, pos);
@@ -88,59 +102,50 @@ public class OpenAlbum extends AppCompatActivity {
             }
         });
 
+        // change album here
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_OPEN_DOCUMENT );
-                startActivityForResult(Intent.createChooser(intent, "Pick a photo"), GALLERY_REQUEST_CODE);
-            }
-        });
+        if (!searchState) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_OPEN_DOCUMENT );
+                    startActivityForResult(Intent.createChooser(intent, "Pick a photo"), GALLERY_REQUEST_CODE);
+                }
+            });
+        } else {
+            fab.hide();
+        }
     }
 
+    // change album here
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.photo_menu, menu);
+        if (!searchState) {
+            super.onCreateContextMenu(menu, v, menuInfo);
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.photo_menu, menu);
+        }
     }
 
+    // change album here
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Photo p;
         switch (item.getItemId()) {
             case R.id.photo_delete:
                 Toast.makeText(this, getResources().getString(R.string.delete) + " " + albums.getAlbums().get(albumIndex).getPhotos().get((int) info.id), Toast.LENGTH_SHORT).show();
-                p = albums.getAlbums().get(albumIndex).getPhotos().remove((int) info.id);
-
-
+                albums.getAlbums().get(albumIndex).getPhotos().remove((int) info.id);
                 try {
                     Albums.write(albums, this);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
                 myImgAdapter.setAlbum(albums.getAlbums().get(albumIndex));
                 gridview.setAdapter(myImgAdapter);
-
-
                 return true;
             case R.id.photo_move:
-                Album temp = albums.getAlbums().get(albumIndex);
                 movePhoto((int) info.id);
-                    /*
-                if (!albums.getAlbums().contains(temp)) {
-                    albums.addAlbum(temp);
-                    albumIndex = albums.getAlbumIndex(temp);
-                    try {
-                        Albums.write(albums, this);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                     */
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -156,53 +161,42 @@ public class OpenAlbum extends AppCompatActivity {
 
         ListAdapter adapter = new ArrayAdapter<Album>(getApplicationContext(), R.layout.move_list_row, albums.getAlbums()) {
             TextView txt;
-            public View getView(int position, View convertView, ViewGroup parent) {
+            public View getView(int position, View textView, ViewGroup parent) {
                 LayoutInflater inflater = getLayoutInflater();
-                if (convertView == null) {
-                    convertView = inflater.inflate(R.layout.move_list_row, null);
-                    txt = (TextView) convertView.findViewById(R.id.row_name);
+                if (textView == null) {
+                    textView = inflater.inflate(R.layout.move_list_row, null);
+                    txt = textView.findViewById(R.id.row_name);
                 } else {
-                    txt = (TextView) convertView;
+                    txt = (TextView) textView;
                 }
                 txt.setText(albums.getAlbums().get(position).toString());
-                return convertView;
+                return textView;
             }
         };
 
-        builder.setAdapter(adapter,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog,
-                                        int destIndex) {
-                        Photo p = temp.getPhotos().remove(photoIndex);
-                        albums.getAlbums().get(destIndex).addPhoto(p);
-                        Toast.makeText(getApplicationContext(), "Moved " + p.toString() + " to " + albums.getAlbums().get(destIndex).getName(), Toast.LENGTH_SHORT).show();
-                        albums.getAlbums().add(temp);
-                        try {
-                            Albums.write(albums, getApplicationContext());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        myImgAdapter.setAlbum(temp);
-                        gridview = (GridView) findViewById(R.id.gridview);
-                        gridview.setAdapter(myImgAdapter);
-
-
+        builder.setAdapter(adapter, (dialog, destIndex) -> {
+                    Photo p = temp.getPhotos().remove(photoIndex);
+                    albums.getAlbums().get(destIndex).addPhoto(p);
+                    Toast.makeText(getApplicationContext(), "Moved " + p.toString() + " to " + albums.getAlbums().get(destIndex).getName(), Toast.LENGTH_SHORT).show();
+                    albums.getAlbums().add(temp);
+                    try {
+                        Albums.write(albums, getApplicationContext());
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
+                    myImgAdapter.setAlbum(temp);
+                    gridview = findViewById(R.id.gridview);
+                    gridview.setAdapter(myImgAdapter);
                 });
+
         builder.setCancelable(false);
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                albums.getAlbums().add(temp);
-            }
-        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> albums.getAlbums().add(temp));
         AlertDialog alert = builder.create();
         alert.show();
     }
 
 
+    // change album here possibly
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK && intent != null){
@@ -210,7 +204,7 @@ public class OpenAlbum extends AppCompatActivity {
             albums.getAlbums().get(albumIndex).addPhoto(new Photo(imageData));
             myImgAdapter = new ImageAdapter(this);
             myImgAdapter.setAlbum(albums.getAlbums().get(albumIndex));
-            gridview = (GridView) findViewById(R.id.gridview);
+            gridview = findViewById(R.id.gridview);
             gridview.setAdapter(myImgAdapter);
             try {
                 Albums.write(albums, this);

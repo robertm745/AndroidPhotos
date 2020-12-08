@@ -23,11 +23,15 @@ public class OpenPhoto extends AppCompatActivity {
     public static final String ALBUM_INDEX = "albumIndex";
     public static final String PHOTO_INDEX = "albumIndex";
     public static final String ALBUMS = "albums";
+    public static final String SEARCH_STATE = "searchState";
+    public static final String ALBUM = "album";
 
     private int albumIndex;
     private int photoIndex;
     private Albums albums;
     private ListView listView;
+    private boolean searchState;
+    private Album album;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,33 +46,36 @@ public class OpenPhoto extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
+            this.searchState = bundle.getBoolean(OpenPhoto.SEARCH_STATE);
+            if (searchState)
+                this.album = (Album) bundle.getSerializable(OpenPhoto.ALBUM);
             albumIndex = bundle.getInt(ALBUM_INDEX);
             photoIndex = bundle.getInt(PHOTO_INDEX);
             this.albums = (Albums) getIntent().getSerializableExtra(ALBUMS);
-            setTitle(bundle.getString(ALBUM_NAME) + "Slideshow");
+            setTitle(bundle.getString(ALBUM_NAME) + " Slideshow");
         }
 
 
-        FloatingActionButton fab = findViewById(R.id.add_tag_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        if (!searchState) {
+            FloatingActionButton fab = findViewById(R.id.add_tag_fab);
+            fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show());
+        }
 
         ImageView imageView = findViewById(R.id.slideshow_imageview);
-        imageView.setImageURI(Uri.parse(albums.getAlbums().get(albumIndex).getPhotos().get(photoIndex).getLocation()));
+        if (searchState)
+            imageView.setImageURI(Uri.parse(album.getPhotos().get(photoIndex).getLocation()));
+        else
+            imageView.setImageURI(Uri.parse(albums.getAlbums().get(albumIndex).getPhotos().get(photoIndex).getLocation()));
 
         Button previous = findViewById(R.id.previous_button);
-        previous.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                if (photoIndex > 0){
-                    photoIndex -= 1;;
+        previous.setOnClickListener(view -> {
+            if (photoIndex > 0){
+                photoIndex -= 1;
+                if (searchState)
+                    imageView.setImageURI(Uri.parse(album.getPhotos().get(photoIndex).getLocation()));
+                else
                     imageView.setImageURI(Uri.parse(albums.getAlbums().get(albumIndex).getPhotos().get(photoIndex).getLocation()));
-                }
             }
         });
 
@@ -78,7 +85,10 @@ public class OpenPhoto extends AppCompatActivity {
             public void onClick(View view) {
                 if (photoIndex < albums.getAlbums().get(albumIndex).getPhotos().size()-1){
                     photoIndex += 1;;
-                    imageView.setImageURI(Uri.parse(albums.getAlbums().get(albumIndex).getPhotos().get(photoIndex).getLocation()));
+                    if (searchState)
+                        imageView.setImageURI(Uri.parse(album.getPhotos().get(photoIndex).getLocation()));
+                    else
+                        imageView.setImageURI(Uri.parse(albums.getAlbums().get(albumIndex).getPhotos().get(photoIndex).getLocation()));
                 }
 
             }
