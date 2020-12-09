@@ -187,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, ADD_ALBUM);
     }
 
+    @Override
     protected void onActivityResult(int requestCode,
                                     int resultCode,
                                     Intent intent) {

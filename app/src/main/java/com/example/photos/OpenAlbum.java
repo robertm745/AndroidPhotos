@@ -91,13 +91,21 @@ public class OpenAlbum extends AppCompatActivity {
                 if (gridview.getAdapter().getCount() > 0) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(OpenPhoto.ALBUM, album);
-                    bundle.putInt(OpenPhoto.ALBUM_INDEX, albumIndex);
                     bundle.putString(OpenPhoto.ALBUM_NAME, album.getName());
                     bundle.putInt(OpenPhoto.PHOTO_INDEX, pos);
-                    Intent intent = new Intent(getApplicationContext(), OpenPhoto.class);
-                    intent.putExtras(bundle);
-                    intent.putExtra(AddAlbum.ALBUMS, albums);
-                    startActivityForResult(intent, OPEN_PHOTO);
+                    if (searchState){
+                        bundle.putBoolean(OpenPhoto.SEARCH_STATE, searchState);
+                        Intent intent = new Intent(getApplicationContext(), OpenPhoto.class);
+                        intent.putExtras(bundle);
+                        startActivityForResult(intent, OPEN_PHOTO);
+                    } else {
+                        bundle.putInt(OpenPhoto.ALBUM_INDEX, albumIndex);
+                        Intent intent = new Intent(getApplicationContext(), OpenPhoto.class);
+                        intent.putExtras(bundle);
+                        intent.putExtra(AddAlbum.ALBUMS, albums);
+                        startActivityForResult(intent, OPEN_PHOTO);
+                    }
+
                 }
             }
         });
@@ -211,7 +219,12 @@ public class OpenAlbum extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else if (resultCode == RESULT_OK && intent != null) {
+            Bundle bundle = intent.getExtras();
+            albums = (Albums) bundle.get(ALBUMS);
         }
+
+
 
     }
 

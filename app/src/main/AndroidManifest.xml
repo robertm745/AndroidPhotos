@@ -10,6 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Photos">
         <activity
+            android:name=".AddTag"
+            android:label="@string/title_activity_add_tag"
+            android:theme="@style/Theme.Photos.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.photos.OpenPhoto" />
+        </activity>
+        <activity
             android:name=".SearchPhotos"
             android:label="@string/title_activity_search_photos"
             android:theme="@style/Theme.Photos.NoActionBar">

@@ -12,25 +12,121 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="2dp"
-        android:text="@string/tag_val_prompt"
+        android:text="Tag type: (requried)"
         />
 
     <!-- Name field -->
-    <EditText
-        android:id="@+id/tag_loc_val"
-        android:layout_width="match_parent"
+    <RadioGroup
+        android:id="@+id/radioButtonQuery1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/editbox_background"
-        android:hint="@string/enter_location_tag"
-        android:textColorHint="@color/black"/>
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radioButtonLocation1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Location" />
+
+        <RadioButton
+            android:id="@+id/radioButtonPerson1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Person" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dp"
+        android:text="Tag value: (requried)"
+        />
 
     <EditText
-        android:id="@+id/tag_per_val"
+        android:id="@+id/search_query1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:drawable/editbox_background"
-        android:hint="@string/enter_person_tag"
-        android:textColorHint="@color/black"/>
+        android:hint="Tag value"
+        android:textColorHint="@color/black" />
+
+    <!--  Name label -->
+
+
+    <RadioGroup
+        android:id="@+id/condition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/singleradioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Single" />
+
+        <RadioButton
+            android:id="@+id/andradioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="AND" />
+
+        <RadioButton
+            android:id="@+id/orradioButton2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="OR" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/search_prompttag2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dp"
+        android:text="Tag type: (requried)"
+        android:visibility="invisible" />
+
+    <!-- Name field -->
+    <RadioGroup
+        android:id="@+id/radioButtonQuery2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radioButtonLocation2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Location"
+            android:visibility="invisible" />
+
+        <RadioButton
+            android:id="@+id/radioButtonPerson2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Person"
+            android:visibility="invisible" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/search_promptvalue2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dp"
+        android:text="Tag value: (requried)"
+        android:visibility="invisible" />
+
+    <EditText
+        android:id="@+id/search_query2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/editbox_background"
+        android:hint="Tag value"
+        android:textColorHint="@color/black"
+        android:visibility="invisible" />
 
 
     <!--  Buttons for save and cancel -->
@@ -42,19 +138,32 @@
         android:paddingTop="20dp">
 
         <Button
-            android:id="@+id/search_btn"
+            android:id="@+id/search_save"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginEnd="15dp"
             android:background="@color/albumBack"
             android:onClick="search"
-            android:text="@string/search"
+            android:text="Search"
             android:textColor="@color/albumFore"
             android:textSize="16sp"
+            android:visibility="visible"
             app:backgroundTint="@null" />
 
-
+        <Button
+            android:id="@+id/search_cancel"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@color/albumBack"
+            android:onClick="cancelTag"
+            android:text="@string/cancel_label"
+            android:textColor="@color/albumFore"
+            android:textSize="16sp"
+            android:visibility="visible"
+            app:backgroundTint="@null" />
 
     </LinearLayout>
 </LinearLayout>
+

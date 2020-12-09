@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="?attr/actionBarSize"
+    android:padding="20dp">
+
+    <!--  Name label -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dp"
+        android:text="Tag type: (requried)"
+        />
+
+    <!-- Name field -->
+    <RadioGroup
+        android:id="@+id/tag_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/radioButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Location" />
+
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Person" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dp"
+        android:text="Tag value: (requried)"
+        />
+
+    <EditText
+        android:id="@+id/tag_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/editbox_background"
+        android:hint="Enter new tag value"
+        android:textColorHint="@color/black"/>
+
+
+    <!--  Buttons for save and cancel -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="20dp">
+
+        <Button
+            android:id="@+id/movie_save"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            app:backgroundTint="@null"
+            android:layout_marginEnd="15dp"
+            android:background="@color/albumBack"
+            android:onClick="saveTag"
+            android:text="@string/save_label"
+            android:textColor="@color/albumFore"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/movie_cancel"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            app:backgroundTint="@null"
+            android:background="@color/albumBack"
+            android:onClick="cancelTag"
+            android:text="@string/cancel_label"
+            android:textColor="@color/albumFore"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+</LinearLayout>
+

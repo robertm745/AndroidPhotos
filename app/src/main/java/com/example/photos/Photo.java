@@ -9,14 +9,12 @@ import java.util.ArrayList;
 public class Photo implements Serializable {
     String location;
     String caption;
-    ArrayList<String> locationTags;
-    ArrayList<String> personTags;
+    ArrayList<String> tags;
 
     public Photo(Uri uri){
         this.location = uri.toString();
         this.caption = new File(uri.getPath()).getName();
-        this.locationTags = new ArrayList<String>();
-        this.personTags = new ArrayList<String>();
+        this.tags = new ArrayList<String>();
     }
 
     public String getLocation() {
@@ -36,20 +34,12 @@ public class Photo implements Serializable {
         this.caption = caption;
     }
 
-    public ArrayList<String> getLocationTags() {
-        return locationTags;
+    public ArrayList<String> getTags() {
+        return this.tags;
     }
 
-    public ArrayList<String> getPersonTags() {
-        return personTags;
-    }
-
-    public void addPersonTag(String tag) {
-        this.personTags.add(tag);
-    }
-
-    public void addLocationTag(String tag) {
-        this.locationTags.add(tag);
+    public void addTag(String tag) {
+        this.tags.add(tag);
     }
 
     public String toString() {

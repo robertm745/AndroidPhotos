@@ -28,4 +28,6 @@
     <string name="enter_person_tag">Enter Person Tag</string>
     <string name="enter_location_tag">Enter Location Tag</string>
     <string name="search">Search</string>
+    <string name="caption">Caption</string>
+    <string name="title_activity_add_tag">AddTag</string>
 </resources>
