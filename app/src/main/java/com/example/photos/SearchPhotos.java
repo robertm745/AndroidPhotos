@@ -93,22 +93,32 @@ public class SearchPhotos extends AppCompatActivity {
     }
 
     public void search(View v) {
-        if (singleradioButton.isChecked()){
+        if (singleradioButton.isChecked()) {
             String query = search_query1.getText().toString();
+            String complete;
+            String type;
             if (radioButtonLocation1.isChecked()){
-                query = "location|" + query;
+                complete = "location|" + query;
+                type = "location";
             } else {
-                query = "person|" + query;
+                complete = "person|" + query;
+                type = "person";
             }
-            if (query == null || query.equals("location|") || query.equals("person|")) {
+            if (query == null || query.length() == 0) {
                 Toast.makeText(getApplicationContext(), "null/empty", Toast.LENGTH_SHORT).show();
                 return;
             } else {
-                Toast.makeText(getApplicationContext(), "Searching for " + query, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Searching for " + complete, Toast.LENGTH_SHORT).show();
                 Album results = new Album("Search Results");
                 for (Album a : albums.getAlbums()) {
                     for (Photo p : a.getPhotos()) {
-                        if (p.getTags().contains(query)) results.addPhoto(p);
+                        for (String val : p.getTags()){
+                            String[] split = val.split("\\|");
+                            if (split[0].equals(type) && split[1].startsWith(query)){
+                                results.addPhoto(p);
+                            }
+                        }
+
                     }
                 }
                 openAlbum(results);
@@ -120,25 +130,46 @@ public class SearchPhotos extends AppCompatActivity {
         } else if (andradioButton.isChecked()){
             String query1 = search_query1.getText().toString();
             String query2 = search_query2.getText().toString();
+            String complete1;
+            String complete2;
+            String type1;
+            String type2;
             if (radioButtonLocation1.isChecked()){
-                query1 = "location|" + query1;
+                complete1 = "location|" + query1;
+                type1 = "location";
             } else {
-                query1 = "person|" + query1;
+                complete1 = "person|" + query1;
+                type1 = "person";
             }
             if (radioButtonLocation2.isChecked()){
-                query2 = "location|" + query2;
+                complete2 = "location|" + query2;
+                type2 = "location";
             } else {
-                query2 = "person|" + query2;
+                complete2 = "person|" + query2;
+                type2 = "person";
             }
-            if (query1 == null || query1.equals("location|") || query1.equals("person|") || query2 == null || query2.equals("location|") || query2.equals("person|")) {
+            if (query1 == null || query1.length() == 0 || query2 == null || query2.length() == 0) {
                 Toast.makeText(getApplicationContext(), "null/empty", Toast.LENGTH_SHORT).show();
                 return;
             } else {
-                Toast.makeText(getApplicationContext(), "Searching for " + query1 + " AND " + query2, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Searching for " + complete1 + " AND " + complete2, Toast.LENGTH_SHORT).show();
                 Album results = new Album("Search Results");
+                boolean foundone = false;
+                boolean foundtwo = false;
                 for (Album a : albums.getAlbums()) {
                     for (Photo p : a.getPhotos()) {
-                        if (p.getTags().contains(query1) && p.getTags().contains(query2)) results.addPhoto(p);
+                        foundone = false;
+                        foundtwo = false;
+                        for (String val : p.getTags()){
+                            String[] split = val.split("\\|");
+                            if (split[0].equals(type1) && split[1].startsWith(query1) || split[0].equals(type2) && split[1].startsWith(query2)){
+                                if (foundone) foundtwo = true;
+                                else foundone = true;
+                            }
+                        }
+
+                        if (foundone && foundtwo) results.addPhoto(p);
+
                     }
                 }
                 openAlbum(results);
@@ -151,25 +182,39 @@ public class SearchPhotos extends AppCompatActivity {
         } else if (orradioButton2.isChecked()){
             String query1 = search_query1.getText().toString();
             String query2 = search_query2.getText().toString();
+            String complete1;
+            String complete2;
+            String type1;
+            String type2;
             if (radioButtonLocation1.isChecked()){
-                query1 = "location|" + query1;
+                complete1 = "location|" + query1;
+                type1 = "location";
             } else {
-                query1 = "person|" + query1;
+                complete1 = "person|" + query1;
+                type1 = "person";
             }
             if (radioButtonLocation2.isChecked()){
-                query2 = "location|" + query2;
+                complete2 = "location|" + query2;
+                type2 = "location";
             } else {
-                query2 = "person|" + query2;
+                complete2 = "person|" + query2;
+                type2 = "person";
             }
-            if (query1 == null || query1.equals("location|") || query1.equals("person|") || query2 == null || query2.equals("location|") || query2.equals("person|")) {
+            if (query1 == null || query1.length() == 0 || query2 == null || query2.length() == 0) {
                 Toast.makeText(getApplicationContext(), "null/empty", Toast.LENGTH_SHORT).show();
                 return;
             } else {
-                Toast.makeText(getApplicationContext(), "Searching for " + query1 + " OR " + query2, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Searching for " + complete1 + " OR " + complete2, Toast.LENGTH_SHORT).show();
                 Album results = new Album("Search Results");
                 for (Album a : albums.getAlbums()) {
                     for (Photo p : a.getPhotos()) {
-                        if (p.getTags().contains(query1) || p.getTags().contains(query2)) results.addPhoto(p);
+                        for (String val : p.getTags()){
+                            String[] split = val.split("\\|");
+                            if (split[0].equals(type1) && split[1].startsWith(query1) || split[0].equals(type2) && split[1].startsWith(query2)){
+                                results.addPhoto(p);
+                                break;
+                            }
+                        }
                     }
                 }
                 openAlbum(results);
@@ -238,6 +283,11 @@ public class SearchPhotos extends AppCompatActivity {
             intent.putExtra(OpenAlbum.ALBUMS, albums);
             startActivityForResult(intent, OPEN_ALBUM);
         }
+    }
+
+    public void cancel(View view) {
+        setResult(RESULT_CANCELED);
+        finish();
     }
 
 }
