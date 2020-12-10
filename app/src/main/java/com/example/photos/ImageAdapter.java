@@ -25,7 +25,7 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     public Object getItem(int position) {
-        return null;
+        return album.getPhotos().get(position);
     }
 
     public long getItemId(int position) {

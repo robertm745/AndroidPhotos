@@ -142,8 +142,9 @@ public class OpenAlbum extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
             case R.id.photo_delete:
-                Toast.makeText(this, getResources().getString(R.string.delete) + " " + albums.getAlbums().get(albumIndex).getPhotos().get((int) info.id), Toast.LENGTH_SHORT).show();
-                albums.getAlbums().get(albumIndex).getPhotos().remove((int) info.id);
+                Toast.makeText(this, getResources().getString(R.string.delete) + "d " + albums.getAlbums().get(albumIndex).getPhotos().get(info.position), Toast.LENGTH_SHORT).show();
+                albums.getAlbums().get(albumIndex).getPhotos().remove(info.position);
+                //albums.getAlbums().get(albumIndex).getPhotos().remove((int) info.id);
                 try {
                     Albums.write(albums, this);
                 } catch (IOException e) {
@@ -153,7 +154,9 @@ public class OpenAlbum extends AppCompatActivity {
                 gridview.setAdapter(myImgAdapter);
                 return true;
             case R.id.photo_move:
-                movePhoto((int) info.id);
+                movePhoto(info.position);
+                Toast.makeText(this, "Moving index" + info.position + ", photo is " + gridview.getItemAtPosition(info.position), Toast.LENGTH_SHORT).show();
+
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -186,13 +189,13 @@ public class OpenAlbum extends AppCompatActivity {
                     Photo p = temp.getPhotos().remove(photoIndex);
                     albums.getAlbums().get(destIndex).addPhoto(p);
                     Toast.makeText(getApplicationContext(), "Moved " + p.toString() + " to " + albums.getAlbums().get(destIndex).getName(), Toast.LENGTH_SHORT).show();
-                    albums.getAlbums().add(temp);
+                    albums.addAlbum(temp);
                     try {
                         Albums.write(albums, getApplicationContext());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    myImgAdapter.setAlbum(temp);
+                    myImgAdapter.setAlbum(albums.getAlbums().get(albums.getAlbumIndex(temp)));
                     gridview = findViewById(R.id.gridview);
                     gridview.setAdapter(myImgAdapter);
                 });

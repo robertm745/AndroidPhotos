@@ -115,6 +115,15 @@ public class MainActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.album_list);
 
+        /*
+        this.albums = new Albums();
+        try {
+            Albums.write(this.albums, this);
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+         */
+
         try {
            this.albums = Albums.readAlbums(this);
         } catch (IOException | ClassNotFoundException e){
@@ -211,7 +220,6 @@ public class MainActivity extends AppCompatActivity {
             Album album = albums.getAlbums().get(index);
             album.setName(name);
         } else {
-            Toast.makeText(getApplicationContext(), "true", Toast.LENGTH_SHORT).show();
             albums.addAlbum(new Album(name));
         }
 
