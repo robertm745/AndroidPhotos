@@ -285,7 +285,7 @@ public class SearchPhotos extends AppCompatActivity {
         }
     }
 
-    public void search_cancel(View view) {
+    public void cancelTag(View view) {
         setResult(RESULT_CANCELED);
         finish();
     }
