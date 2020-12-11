@@ -115,14 +115,6 @@ public class MainActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.album_list);
 
-        /*
-        this.albums = new Albums();
-        try {
-            Albums.write(this.albums, this);
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
-         */
 
         try {
            this.albums = Albums.readAlbums(this);

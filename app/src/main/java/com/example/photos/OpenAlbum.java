@@ -142,9 +142,8 @@ public class OpenAlbum extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
             case R.id.photo_delete:
-                Toast.makeText(this, getResources().getString(R.string.delete) + "d " + albums.getAlbums().get(albumIndex).getPhotos().get(info.position), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Deleted " + albums.getAlbums().get(albumIndex).getPhotos().get(info.position), Toast.LENGTH_SHORT).show();
                 albums.getAlbums().get(albumIndex).getPhotos().remove(info.position);
-                //albums.getAlbums().get(albumIndex).getPhotos().remove((int) info.id);
                 try {
                     Albums.write(albums, this);
                 } catch (IOException e) {
@@ -155,7 +154,6 @@ public class OpenAlbum extends AppCompatActivity {
                 return true;
             case R.id.photo_move:
                 movePhoto(info.position);
-                Toast.makeText(this, "Moving index" + info.position + ", photo is " + gridview.getItemAtPosition(info.position), Toast.LENGTH_SHORT).show();
 
                 return true;
             default:
