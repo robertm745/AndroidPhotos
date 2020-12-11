@@ -60,6 +60,16 @@ public class AddTag extends AppCompatActivity {
     public void saveTag(View view) {
         // gather all data from text fields
         String name = tagName.getText().toString();
+
+
+        // pop up dialog if errors in input, and return
+        // name and year are mandatory
+        if (name == null || name.length() == 0) {
+            Toast.makeText(getApplicationContext(), "Tag value required",
+                    Toast.LENGTH_SHORT).show();
+            return; // does not quit activity, just returns from method
+        }
+
         if (tagTypeLocation.isChecked()){
             name = "location|" + name;
         } else if (tagTypePerson.isChecked()){
@@ -71,13 +81,7 @@ public class AddTag extends AppCompatActivity {
         }
 
 
-        // pop up dialog if errors in input, and return
-        // name and year are mandatory
-        if (name == null || name.length() == 0) {
-            Toast.makeText(getApplicationContext(), "Tag value required",
-                    Toast.LENGTH_SHORT).show();
-            return; // does not quit activity, just returns from method
-        }
+
 
 
         if (albums.getAlbums().get(albumIndex).getPhotos().get(photoIndex).getTags().contains(name)) {
