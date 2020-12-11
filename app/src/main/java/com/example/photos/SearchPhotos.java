@@ -105,6 +105,7 @@ public class SearchPhotos extends AppCompatActivity {
                 type = "person";
             }
             if (query == null || query.length() == 0) {
+                Toast.makeText(getApplicationContext(), "Tag value required", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 Toast.makeText(getApplicationContext(), "Searching for " + complete, Toast.LENGTH_SHORT).show();
@@ -148,6 +149,7 @@ public class SearchPhotos extends AppCompatActivity {
                 type2 = "person";
             }
             if (query1 == null || query1.length() == 0 || query2 == null || query2.length() == 0) {
+                Toast.makeText(getApplicationContext(), "Second Tag value required", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 Toast.makeText(getApplicationContext(), "Searching for " + complete1 + " AND " + complete2, Toast.LENGTH_SHORT).show();
@@ -199,6 +201,7 @@ public class SearchPhotos extends AppCompatActivity {
                 type2 = "person";
             }
             if (query1 == null || query1.length() == 0 || query2 == null || query2.length() == 0) {
+                Toast.makeText(getApplicationContext(), "Second Tag value required", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 Toast.makeText(getApplicationContext(), "Searching for " + complete1 + " OR " + complete2, Toast.LENGTH_SHORT).show();
